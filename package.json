@@ -8,6 +8,10 @@
     "start": "next start",
     "lint": "eslint",
     "test:api": "tsx tests/integration/api.test.ts",
+    "test:signup": "tsx tests/integration/signup.test.ts",
+    "test:login": "tsx tests/integration/login.test.ts",
+    "test:session": "tsx tests/integration/session.test.ts",
+    "test:password": "tsx tests/integration/password-security.test.ts",
     "test:integration": "tsx tests/integration/*.test.ts"
   },
   "dependencies": {
