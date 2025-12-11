@@ -9,7 +9,11 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "picsum.photos",  // 추가!
+        hostname: "picsum.photos",
+      },
+      {
+        protocol: "https",
+        hostname: "hgusairwaqkokydmxrvc.supabase.co", // Supabase Storage
       },
     ],
   },
