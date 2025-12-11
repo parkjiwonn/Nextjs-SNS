@@ -3,16 +3,57 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { posts } from "@/lib/db/schema";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { uploadImageFromBuffer } from "@/lib/storage/supabase";
 
-const s3 = new S3Client({
-  region: process.env.AWS_REGION!,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-  },
-});
-
+/**
+ * @swagger
+ * /api/posts:
+ *   post:
+ *     summary: 게시글 작성
+ *     description: 새로운 게시글을 작성하고 이미지를 업로드합니다 (로그인 필요)
+ *     tags:
+ *       - Posts
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - content
+ *             properties:
+ *               content:
+ *                 type: string
+ *                 description: 게시글 내용
+ *                 example: 오늘 날씨가 좋네요!
+ *               images:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *                 description: 업로드할 이미지 파일들 (최대 5MB, 이미지 파일만 가능)
+ *     responses:
+ *       201:
+ *         description: 게시글 작성 완료
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 게시글 작성 완료
+ *                 postId:
+ *                   type: string
+ *       400:
+ *         description: 잘못된 요청 (내용 누락, 파일 크기 초과 등)
+ *       401:
+ *         description: 인증 필요 (로그인 필요)
+ *       500:
+ *         description: 서버 오류
+ */
 export async function POST(request: Request) {
   try {
     const session = await getServerSession(authOptions);
@@ -34,9 +75,9 @@ export async function POST(request: Request) {
       );
     }
 
-    // S3에 이미지 업로드
+    // Supabase Storage에 이미지 업로드
     const imageUrls: string[] = [];
-    
+
     for (const file of imageFiles) {
       if (file && file.size > 0) {
         // 파일 검증
@@ -54,20 +95,21 @@ export async function POST(request: Request) {
           );
         }
 
-        const buffer = Buffer.from(await file.arrayBuffer());
-        const key = `posts/${Date.now()}-${crypto.randomUUID()}-${file.name}`;
-
-        await s3.send(
-          new PutObjectCommand({
-            Bucket: process.env.AWS_BUCKET_NAME!,
-            Key: key,
-            Body: buffer,
-            ContentType: file.type,
-          })
-        );
-
-        const url = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
-        imageUrls.push(url);
+        try {
+          const buffer = Buffer.from(await file.arrayBuffer());
+          const imageUrl = await uploadImageFromBuffer(
+            buffer,
+            file.name,
+            file.type
+          );
+          imageUrls.push(imageUrl);
+        } catch (uploadError) {
+          console.error("Image upload error:", uploadError);
+          return NextResponse.json(
+            { error: "이미지 업로드 실패" },
+            { status: 500 }
+          );
+        }
       }
     }
 
@@ -81,7 +123,7 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json(
-      { message: "게시글 작성 완료", postId },
+      { message: "게시글 작성 완료", postId, imageUrls },
       { status: 201 }
     );
   } catch (error) {

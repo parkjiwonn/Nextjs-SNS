@@ -1,0 +1,22 @@
+{
+  "$schema": "node_modules/@openapitools/openapi-generator-cli/config.schema.json",
+  "spaces": 2,
+  "generator-cli": {
+    "version": "7.10.0",
+    "generators": {
+      "typescript-fetch": {
+        "generatorName": "typescript-fetch",
+        "output": "./generated/api",
+        "glob": "http://localhost:3003/api/swagger",
+        "additionalProperties": {
+          "supportsES6": true,
+          "npmName": "@jiwon-sns/api-client",
+          "npmVersion": "1.0.0",
+          "typescriptThreePlus": true,
+          "withoutPrefixEnums": true,
+          "modelPropertyNaming": "original"
+        }
+      }
+    }
+  }
+}
