@@ -36,35 +36,6 @@ Jiwon SNS는 사용자들이 일상을 공유하고 소통할 수 있는 소셜 
 - ✅ 회원가입 / 로그인 (NextAuth.js)
 - ✅ 게시글 작성 (텍스트 + 이미지)
 
-## 프로젝트 구조
-
-```
-jiwon-sns/
-├── app/
-│   ├── api/              # API Routes
-│   │   ├── auth/         # 인증 관련 API
-│   │   ├── posts/        # 게시글 API
-│   │   ├── swagger/      # OpenAPI 스펙 제공
-│   │   └── test-db/      # DB 연결 테스트
-│   ├── api-docs/         # Swagger UI 페이지
-│   └── ...
-├── lib/
-│   ├── api/              # API 클라이언트
-│   │   └── client.ts     # 타입 안전한 API 호출 함수
-│   ├── db/               # 데이터베이스
-│   │   ├── schema.ts     # Drizzle 스키마 정의
-│   │   └── index.ts      # DB 연결 설정
-│   ├── storage/          # 파일 저장
-│   │   └── supabase.ts   # Supabase Storage 유틸리티
-│   └── swagger.ts        # Swagger 설정
-├── generated/
-│   └── api/              # 자동 생성된 TypeScript 타입
-│       └── schema.ts
-├── drizzle/              # 데이터베이스 마이그레이션
-└── tests/
-    └── integration/      # 통합 테스트 스크립트
-
-```
 
 ## 시작하기
 
