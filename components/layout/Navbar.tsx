@@ -34,7 +34,7 @@ export default function Navbar({ session }: NavbarProps) {
                 />
               )}
               <button
-                onClick={() => signOut({ callbackUrl: "/login" })}
+                onClick={() => signOut({ callbackUrl: "/signin" })}
                 className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition"
               >
                 로그아웃

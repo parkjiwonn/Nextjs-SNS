@@ -11,7 +11,7 @@ export default async function HomePage() {
   const session = await getServerSession(authOptions);
   console.log(session);
   if (!session) {
-    redirect("/login");
+    redirect("/signin");
   }
 
   // 모든 게시글 조회 (최신순)
