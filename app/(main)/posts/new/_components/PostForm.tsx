@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { API_ENDPOINTS, ROUTES } from "@/constants";
 
 interface ImagePreview {
   file: File;
@@ -59,7 +60,7 @@ export function PostForm() {
         formData.append("images", img.file);
       });
 
-      const response = await fetch("/api/posts", {
+      const response = await fetch(API_ENDPOINTS.POSTS, {
         method: "POST",
         body: formData,
       });
@@ -72,10 +73,10 @@ export function PostForm() {
 
       // cleanup
       images.forEach((img) => URL.revokeObjectURL(img.preview));
-      
+
       // 성공 메시지와 함께 홈으로 이동
       alert("게시글이 작성되었습니다!");
-      router.push("/");
+      router.push(ROUTES.HOME);
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "게시글 작성 중 오류가 발생했습니다");
@@ -179,7 +180,7 @@ export function PostForm() {
           {/* Action Buttons */}
           <div className="flex gap-3">
             <Link
-              href="/"
+              href={ROUTES.HOME}
               className="px-5 py-2 text-gray-700 font-medium hover:bg-gray-200 rounded-full transition-colors"
             >
               취소

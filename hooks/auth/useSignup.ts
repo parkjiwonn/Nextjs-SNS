@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { API_ENDPOINTS, ROUTES } from "@/constants";
 
 /**
  * 회원가입 폼 데이터 타입
@@ -57,7 +58,7 @@ export function useSignup() {
     setLoading(true);
 
     try {
-      const response = await fetch("/api/auth/signup", {
+      const response = await fetch(API_ENDPOINTS.AUTH.SIGNUP, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -72,7 +73,7 @@ export function useSignup() {
       }
 
       // 회원가입 성공 시 로그인 페이지로 리다이렉트
-      router.push("/signin?signup=success");
+      router.push(`${ROUTES.SIGNIN}?signup=success`);
     } catch (err) {
       setError("회원가입 중 오류가 발생했습니다");
       setLoading(false);

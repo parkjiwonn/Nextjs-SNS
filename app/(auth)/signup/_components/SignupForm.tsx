@@ -5,6 +5,7 @@ import { Alert } from "@/components/ui/Alert";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { useSignup } from "@/hooks/auth/useSignup";
+import { ROUTES } from "@/constants";
 
 export function SignupForm() {
   const { formData, error, loading, handleChange, handleSubmit } = useSignup();
@@ -74,9 +75,9 @@ export function SignupForm() {
 
       <div className="mt-6 text-center">
         <p className="text-sm text-gray-600">
-         
+
           <Link
-            href="/signin"
+            href={ROUTES.SIGNIN}
             className="text-blue-600 hover:text-blue-700 font-medium"
           >
             로그인

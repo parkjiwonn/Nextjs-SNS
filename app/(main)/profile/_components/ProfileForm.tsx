@@ -6,6 +6,7 @@ import { Alert } from "@/components/ui/Alert";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { useProfile } from "@/hooks/useProfile";
+import { validateImageFile, readFileAsDataURL } from "@/lib/utils";
 
 export function ProfileForm() {
   const { profile, loading, updating, error, updateProfile } = useProfile();
@@ -25,30 +26,26 @@ export function ProfileForm() {
     }
   }, [profile]);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // 파일 크기 검증 (5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      alert("파일 크기는 5MB 이하여야 합니다");
-      return;
-    }
-
-    // 이미지 파일 검증
-    if (!file.type.startsWith("image/")) {
-      alert("이미지 파일만 업로드 가능합니다");
+    // validation 로직을 utils로 분리
+    const validationResult = validateImageFile(file);
+    if (!validationResult.isValid) {
+      alert(validationResult.error);
       return;
     }
 
     setProfileImage(file);
 
-    // 미리보기 생성
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setPreviewUrl(reader.result as string);
-    };
-    reader.readAsDataURL(file);
+    // 미리보기 생성 로직을 utils로 분리
+    try {
+      const dataUrl = await readFileAsDataURL(file);
+      setPreviewUrl(dataUrl);
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "파일을 읽는 중 오류가 발생했습니다");
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

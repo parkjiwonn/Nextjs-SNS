@@ -6,12 +6,13 @@ import Navbar from "@/components/layout/Navbar";
 import { db } from "@/lib/db/index";
 import { posts } from "@/lib/db/schema";
 import { desc, eq } from "drizzle-orm";
+import { ROUTES } from "@/constants";
 
 export default async function HomePage() {
   const session = await getServerSession(authOptions);
   console.log(session);
   if (!session) {
-    redirect("/signin");
+    redirect(ROUTES.SIGNIN);
   }
 
   // 모든 게시글 조회 (최신순)
@@ -65,7 +66,7 @@ export default async function HomePage() {
         {/* 게시글 작성 버튼 */}
         <div className="mb-6 flex justify-end">
           <Link
-            href="/create"
+            href={ROUTES.POSTS.NEW}
             className="bg-blue-400 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
           >
             + 게시글 작성

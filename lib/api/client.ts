@@ -1,5 +1,6 @@
 import createClient from 'openapi-fetch';
 import type { paths } from '@/generated/api/schema';
+import { API_ENDPOINTS } from '@/constants';
 
 // API 클라이언트 생성
 export const apiClient = createClient<paths>({
@@ -22,7 +23,7 @@ export async function signup(data: {
   password: string;
   name: string;
 }) {
-  const { data: response, error } = await apiClient.POST('/api/auth/signup', {
+  const { data: response, error } = await apiClient.POST(API_ENDPOINTS.AUTH.SIGNUP, {
     body: data,
   });
 
@@ -48,7 +49,7 @@ export async function createPost(content: string, images?: File[]) {
   }
 
   // FormData는 fetch API로 직접 전송
-  const response = await fetch('/api/posts', {
+  const response = await fetch(API_ENDPOINTS.POSTS, {
     method: 'POST',
     body: formData,
   });
@@ -65,7 +66,7 @@ export async function createPost(content: string, images?: File[]) {
  * DB 연결 테스트 API
  */
 export async function testDB() {
-  const { data: response, error } = await apiClient.GET('/api/test-db');
+  const { data: response, error } = await apiClient.GET(API_ENDPOINTS.TEST_DB);
 
   if (error) {
     const errorResponse = error as ApiErrorResponse;

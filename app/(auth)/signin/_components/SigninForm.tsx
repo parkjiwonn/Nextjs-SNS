@@ -5,6 +5,7 @@ import { Alert } from "@/components/ui/Alert";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { useSignin } from "@/hooks/auth/useSignin";
+import { ROUTES } from "@/constants";
 
 interface SigninFormProps {
   showSignupSuccess?: boolean;
@@ -56,7 +57,7 @@ export function SigninForm({ showSignupSuccess = false }: SigninFormProps) {
         <p className="text-sm text-gray-600">
           계정이 없으신가요?{" "}
           <Link
-            href="/signup"
+            href={ROUTES.SIGNUP}
             className="text-blue-600 hover:text-blue-700 font-medium"
           >
             회원가입

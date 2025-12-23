@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { API_ENDPOINTS, ROUTES } from "@/constants";
 
 /**
  * 프로필 데이터 타입
@@ -35,11 +36,11 @@ export function useProfile() {
 
   const fetchProfile = async () => {
     try {
-      const response = await fetch("/api/profile");
+      const response = await fetch(API_ENDPOINTS.PROFILE);
 
       if (!response.ok) {
         if (response.status === 401) {
-          router.push("/signin");
+          router.push(ROUTES.SIGNIN);
           return;
         }
         throw new Error("프로필 조회 실패");
@@ -63,7 +64,7 @@ export function useProfile() {
     setUpdating(true);
 
     try {
-      const response = await fetch("/api/profile", {
+      const response = await fetch(API_ENDPOINTS.PROFILE, {
         method: "PUT",
         body: formData,
       });
